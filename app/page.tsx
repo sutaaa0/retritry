@@ -1,7 +1,7 @@
 // app/page.tsx
-'use client';
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [isWaiting, setIsWaiting] = useState(false);
@@ -34,12 +34,12 @@ export default function Home() {
   };
 
   const getCategory = (ms: number) => {
-    if (ms < 150) return '⚠️ Terlalu cepat (mungkin curang)';
-    if (ms < 250) return '🏆 Sangat Cepat';
-    if (ms < 300) return '🚀 Cepat';
-    if (ms < 350) return '🙂 Normal';
-    if (ms < 450) return '🐢 Agak Lambat';
-    return '💤 Sangat Lambat';
+    if (ms < 150) return "⚠️ Terlalu cepat (mungkin curang)";
+    if (ms < 250) return "🏆 Sangat Cepat";
+    if (ms < 300) return "🚀 Cepat";
+    if (ms < 350) return "🙂 Normal";
+    if (ms < 450) return "🐢 Agak Lambat";
+    return "💤 Sangat Lambat";
   };
 
   useEffect(() => {
@@ -52,22 +52,13 @@ export default function Home() {
     <main className="min-h-screen flex flex-col items-center justify-center bg-gray-900 text-white px-4">
       <h1 className="text-3xl font-bold mb-6">Latihan Timing Retributions</h1>
       {!showButton && (
-        <button
-          onClick={startTest}
-          disabled={isWaiting}
-          className={`px-6 py-3 text-lg rounded-lg transition-all duration-300 ${
-            isWaiting ? 'bg-gray-600 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-          }`}
-        >
-          {isWaiting ? 'Tunggu...' : 'Mulai Latihan'}
+        <button onClick={startTest} disabled={isWaiting} className={`px-6 py-3 text-lg rounded-lg transition-all duration-300 ${isWaiting ? "bg-gray-600 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700"}`}>
+          {isWaiting ? "Tunggu..." : "Mulai Latihan"}
         </button>
       )}
 
       {showButton && (
-        <button
-          onClick={handleClick}
-          className="px-8 py-4 mt-4 text-xl font-semibold bg-green-500 hover:bg-green-600 rounded-lg animate-pulse"
-        >
+        <button onClick={handleClick} className="px-8 py-4 mt-4 text-xl font-semibold bg-green-500 hover:bg-green-600 rounded-lg animate-pulse">
           Klik Sekarang!
         </button>
       )}
