@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Play, Pause, RotateCcw, Trophy, Target, Clock, Zap, Shield, Crown, Heart, Volume2, VolumeX, Star, Flame } from "lucide-react";
+import { Play, RotateCcw, Trophy, Target, Zap, Shield, Crown, Heart, Volume2, VolumeX, Star, Flame } from "lucide-react";
 
 type GameMode = "buff" | "turtle" | "lord";
 
@@ -15,7 +15,7 @@ const RetributionTrainer = () => {
   const [level, setLevel] = useState(1);
   const [lives, setLives] = useState(3);
   const [winStreak, setWinStreak] = useState(0);
-  const [accuracy, setAccuracy] = useState(0);
+  const [bestWinStreak, setBestWinStreak] = useState(0);
   const [reactionTime, setReactionTime] = useState(0);
   const [feedback, setFeedback] = useState("");
   const [gameStats, setGameStats] = useState({ attempts: 0, hits: 0, totalReaction: 0 });
@@ -38,13 +38,23 @@ const RetributionTrainer = () => {
   const gameStartTime = useRef(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const audioContext = useRef<AudioContext | null>(null);
-  const backgroundMusic = useRef(null);
 
   // Initialize audio context
   useEffect(() => {
     if (soundEnabled) {
       audioContext.current = new window.AudioContext();
+    } else {
+      if (audioContext.current) {
+        audioContext.current.close();
+        audioContext.current = null;
+      }
     }
+    return () => {
+      if (audioContext.current) {
+        audioContext.current.close();
+        audioContext.current = null;
+      }
+    };
   }, [soundEnabled]);
 
   // Generate particles
@@ -70,18 +80,6 @@ const RetributionTrainer = () => {
     setParticles(newParticles);
     setTimeout(() => setParticles([]), 2000);
   };
-
-  // Sound effects
-  interface SoundOptions {
-    frequency: number;
-    duration: number;
-    type?: OscillatorType;
-  }
-
-  interface AudioNodes {
-    oscillator: OscillatorNode;
-    gainNode: GainNode;
-  }
 
   const playSound = (frequency: number, duration: number, type: OscillatorType = "sine"): void => {
     if (!soundEnabled || !audioContext.current) return;
@@ -209,7 +207,11 @@ const RetributionTrainer = () => {
     }));
 
     if (success) {
-      setWinStreak((prev) => prev + 1);
+      setWinStreak((prev) => {
+        const newStreak = prev + 1;
+        setBestWinStreak((best) => (newStreak > best ? newStreak : best));
+        return newStreak;
+      });
       setComboMultiplier((prev) => Math.min(prev + 0.2, 3));
 
       // Check win streak effects
@@ -591,7 +593,7 @@ const RetributionTrainer = () => {
                 <span className="text-blue-200">Lives Remaining</span>
                 <span className="text-red-400 font-bold">
                   {Array.from({ length: lives })
-                    .map((_, i) => "❤️")
+                    .map(() => "❤️")
                     .join("")}
                 </span>
               </div>
@@ -725,7 +727,7 @@ const RetributionTrainer = () => {
 
               <div className="flex justify-between items-center">
                 <span className="text-blue-200">Best Win Streak</span>
-                <span className="text-orange-400 font-bold">🔥 {winStreak}</span>
+                <span className="text-orange-400 font-bold">🔥 {bestWinStreak}</span>
               </div>
 
               <div className="flex justify-between items-center">
