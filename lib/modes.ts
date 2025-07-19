@@ -1,4 +1,3 @@
-// lib/modes.ts
 import { Sword, Shield, Ghost, Flame } from "lucide-react";
 
 export type ModeKey = "squishy" | "normal" | "tank" | "lord";
